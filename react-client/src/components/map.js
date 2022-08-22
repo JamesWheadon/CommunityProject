@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { GoogleMap, useLoadScript, MarkerF, InfoWindow } from "@react-google-maps/api";
+import { GoogleMap, useLoadScript, Marker, InfoWindow } from "@react-google-maps/api";
 import mapStyles from "../mapStyles";  
 
 export const Map = () => {
@@ -42,7 +42,7 @@ const FetchMap = () => {
   return (
     <GoogleMap zoom={10} center={center} mapContainerClassName="map-container" options={{ styles: mapStyles.styles }}>
       {fakeData.map(data => (
-        <MarkerF 
+        <Marker 
           key={data.animal_id}
           position={{
             lat: data.latitude,
@@ -52,7 +52,7 @@ const FetchMap = () => {
             setSelectedItem(data);
           }}
           icon={{
-            url: 'https://w7.pngwing.com/pngs/458/589/png-transparent-pig-emoji-rosa-face-animal-cute-emoticon-happy-excited-alegre.png',
+            url: 'https://cdn.shopify.com/s/files/1/1061/1924/products/Pig_Emoji_large.png?v=1571606065',
             scaledSize: new window.google.maps.Size(75, 75)
           }}
         />
@@ -60,21 +60,20 @@ const FetchMap = () => {
 
       {selectedItem && (
         <InfoWindow
+          onCloseClick={() => {
+            setSelectedItem(null);
+          }}
           position={{
             lat: selectedItem.latitude,
             lng: selectedItem.longitude
           }} 
-          onCloseClick={() => {
-            setSelectedItem(null);
-          }}>
-            <div>
-              <h1>{selectedItem.animal_name}</h1>
-              <img src={selectedItem.animal_image} alt={selectedItem.animal_name} height="300px" width="300px"/>
-            </div>
-            </InfoWindow>
-      )
-
-      }
+          >
+          <div>
+            <h1>{selectedItem.animal_name}</h1>
+            <img src={selectedItem.animal_image} alt={selectedItem.animal_name} height="300px" width="300px"/>
+          </div>
+        </InfoWindow>
+      )}
     </GoogleMap>
   );
 }
