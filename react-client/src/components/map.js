@@ -2,16 +2,18 @@ import { useMemo, useState } from "react";
 import { GoogleMap, useLoadScript, Marker, InfoWindow } from "@react-google-maps/api";
 import mapStyles from "../mapStyles";  
 
-export const Map = () => {
+export const Map = ({hoveredOriginId}) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   });
 
   if (!isLoaded) return <div>Loading...</div>;
-  return <FetchMap />;
+  return <FetchMap hoveredOriginId={hoveredOriginId} />;
 }
 
-const FetchMap = () => {
+const FetchMap = ({hoveredOriginId}) => {
+
+  console.log(hoveredOriginId);
   const center = useMemo(() => ({ lat: 51.507351, lng: -0.127758 }), []);
   const [selectedItem, setSelectedItem] = useState(null);
   
@@ -69,8 +71,8 @@ const FetchMap = () => {
           }} 
           >
           <div>
-            <h1>{selectedItem.animal_name}</h1>
-            <img src={selectedItem.animal_image} alt={selectedItem.animal_name} height="300px" width="300px"/>
+            <h1>{selectedItem.animal_name.replaceAll('_', ' ')}</h1>
+            <img src={selectedItem.animal_image} alt={selectedItem.animal_name.replaceAll('_', ' ')} height="300px" width="300px"/>
           </div>
         </InfoWindow>
       )}
