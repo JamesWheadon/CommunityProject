@@ -1,12 +1,11 @@
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 
 export const Directory = ({ id, data, onHover }) => {
 
   const handleClick = () => {
-    onHover(data.animal_id)
+    onHover(data.id)
   }
 
   return (
@@ -14,7 +13,6 @@ export const Directory = ({ id, data, onHover }) => {
       <List
         sx={{
           width: '100%',
-          // maxWidth: 360,
           position: 'relative',
           maxHeight: 600,
           '& ul': { padding: 0 },
@@ -22,11 +20,11 @@ export const Directory = ({ id, data, onHover }) => {
         subheader={<li />}
       >
         {data && (
-          <li key={data.animal_id}>
+          <li key={data.id}>
             <ul>
-              <ListSubheader>{data.animal_name.replaceAll('_', ' ')}</ListSubheader>
+              <ListSubheader>{data.name.replaceAll('_', ' ')}</ListSubheader>
               <ListItem onClick={handleClick} key={data.animal_id}>
-                <img src={data.animal_image} alt={data.animal_name.replaceAll('_', ' ')} height="200px" width="200px" />
+                <img src={data.image} alt={data.name.replaceAll('_', ' ')} height="200px" width="200px" />
               </ListItem>
             </ul>
           </li>
