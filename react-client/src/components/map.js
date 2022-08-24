@@ -11,7 +11,7 @@ export const Map = ({hoveredOriginId}) => {
   return <FetchMap hoveredOriginId={hoveredOriginId} />;
 }
 
-const FetchMap = ({hoveredOriginId}) => {
+const FetchMap = ({hoveredOriginId, data}) => {
 
   console.log(hoveredOriginId);
   const center = useMemo(() => ({ lat: 51.507351, lng: -0.127758 }), []);
@@ -40,6 +40,9 @@ const FetchMap = ({hoveredOriginId}) => {
       longitude: 34.44
     },
   ]
+
+  const selectedOrigin = fakeData.find(({ item }) => selectedItem === hoveredOriginId)
+  console.log(selectedOrigin)
 
   return (
     <GoogleMap zoom={10} center={center} mapContainerClassName="map-container" options={{ styles: mapStyles.styles }}>
@@ -72,7 +75,7 @@ const FetchMap = ({hoveredOriginId}) => {
           >
           <div>
             <h1>{selectedItem.animal_name.replaceAll('_', ' ')}</h1>
-            <img src={selectedItem.animal_image} alt={selectedItem.animal_name.replaceAll('_', ' ')} height="300px" width="300px"/>
+            <img src={selectedItem.animal_image} alt={selectedItem.animal_name.replaceAll('_', ' ')} />
           </div>
         </InfoWindow>
       )}
