@@ -13,13 +13,9 @@ export const Map = ({ hoveredOriginId }) => {
 }
 
 const FetchMap = ({ hoveredOriginId }) => {
-
-  // console.log(hoveredOriginId);
   const center = useMemo(() => ({ lat: 51.507351, lng: -0.127758 }), []);
   const [animals, setAnimals] = useState();
-  const [selectedItem, setSelectedItem] = useState(null);
-
-  console.log(selectedItem)
+  const [selectedMarker, setSelectedMarker] = useState(null);
 
   useEffect(() => {
     async function fetchAnimals() {
@@ -41,41 +37,57 @@ const FetchMap = ({ hoveredOriginId }) => {
     } fetchAnimals();
   }, []);
 
-  // const selectedOrigin = data.find(({ item }) => selectedItem === hoveredOriginId)
-  // console.log(selectedOrigin)
+  const selectedDirectory = animals && animals.find((item) => item.id === hoveredOriginId)
 
   return (
     <GoogleMap zoom={10} center={center} mapContainerClassName="map-container" options={{ styles: mapStyles.styles }}>
       {animals && animals.length ? animals.map((data) => (
-        <Marker 
+        <Marker
           key={data.id}
           position={{
             lat: data.latitude,
             lng: data.longitude
           }}
           onClick={() => {
-            setSelectedItem(data);
+            setSelectedMarker(data);
           }}
           icon={{
-            url: 'https://cdn.shopify.com/s/files/1/1061/1924/products/Pig_Emoji_large.png?v=1571606065',
+            url: icons[Math.floor(Math.random() * 8)],
             scaledSize: new window.google.maps.Size(75, 75)
           }}
         />
       )) : null}
 
-      {selectedItem && (
+      {selectedDirectory &&
         <InfoWindow
           onCloseClick={() => {
-            setSelectedItem(null);
+            // ????????
           }}
           position={{
-            lat: selectedItem.latitude,
-            lng: selectedItem.longitude
+            lat: selectedDirectory.latitude,
+            lng: selectedDirectory.longitude
           }}
         >
           <div>
-            <h1>{selectedItem.name.replaceAll('_', ' ')}</h1>
-            <img src={selectedItem.image} alt={selectedItem.name.replaceAll('_', ' ')} />
+            <h1>{selectedDirectory.name.replaceAll('_', ' ')}</h1>
+            <img src={selectedDirectory.image} alt={selectedDirectory.name.replaceAll('_', ' ')} />
+          </div>
+        </InfoWindow>
+      }
+
+      {selectedMarker && (
+        <InfoWindow
+          onCloseClick={() => {
+            setSelectedMarker(null);
+          }}
+          position={{
+            lat: selectedMarker.latitude,
+            lng: selectedMarker.longitude
+          }}
+        >
+          <div>
+            <h1>{selectedMarker.name.replaceAll('_', ' ')}</h1>
+            <img src={selectedMarker.image} alt={selectedMarker.name.replaceAll('_', ' ')} />
           </div>
         </InfoWindow>
       )}
