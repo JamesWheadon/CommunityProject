@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { GoogleMap, useLoadScript, Marker, InfoWindow } from "@react-google-maps/api";
-import mapStyles from "../mapStyles";  
+import mapStyles from "../mapStyles";
+import axios from 'axios';
 
-export const Map = ({hoveredOriginId}) => {
+export const Map = ({ hoveredOriginId }) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   });
@@ -11,71 +12,93 @@ export const Map = ({hoveredOriginId}) => {
   return <FetchMap hoveredOriginId={hoveredOriginId} />;
 }
 
-const FetchMap = ({hoveredOriginId, data}) => {
-
-  console.log(hoveredOriginId);
+const FetchMap = ({ hoveredOriginId }) => {
   const center = useMemo(() => ({ lat: 51.507351, lng: -0.127758 }), []);
-  const [selectedItem, setSelectedItem] = useState(null);
-  
-  const fakeData = [
-    {
-        animal_id: 1,
-        animal_name: 'Addax',
-        animal_image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/A_big_male_Addax_showing_as_the_power_of_his_horns.jpg/800px-A_big_male_Addax_showing_as_the_power_of_his_horns.jpg?20160529142107',
-        latitude: 31.20,
-        longitude: -6.35
-    },
-    {
-      animal_id: 2,
-      animal_name: 'African_bush_elephant',
-      animal_image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/African_Bush_Elephant.jpg/400px-African_Bush_Elephant.jpg',
-      latitude: -32.44,
-      longitude: 24.74
-    },
-    {
-      animal_id: 3,
-      animal_name: 'African_wild_dog',
-      animal_image: 'https://commons.wikimedia.org/wiki/File:African_wild_dog_(Lycaon_pictus_pictus).jpg',
-      latitude: -18.84,
-      longitude: 34.44
-    },
+  const [animals, setAnimals] = useState();
+  const [selectedMarker, setSelectedMarker] = useState(null);
+
+  useEffect(() => {
+    async function fetchAnimals() {
+      const url = 'http://localhost:8080/animals'
+      try {
+        const options = {
+          headers: {
+            "Content-Type": `application/json;charset=utf-8`
+          }
+        };
+        const { data } = await axios.get(url, options)
+        if (data.err) {
+          throw new Error(data.err)
+        }
+        setAnimals(data.animals)
+      } catch {
+        console.warn("There's an error!!! Cannot fetch data!")
+      }
+    } fetchAnimals();
+  }, []);
+
+  const icons = [
+    'https://cdn.shopify.com/s/files/1/1061/1924/products/Horse_emoji_icon_png_large.png?v=1571606088',
+    'https://cdn.shopify.com/s/files/1/1061/1924/products/Pig_Emoji_large.png?v=1571606065',
+    'https://cdn.shopify.com/s/files/1/1061/1924/products/Dog_Emoji_large.png?v=1571606065',
+    'https://cdn.shopify.com/s/files/1/1061/1924/products/CAT_emoji_icon_png_large.png?v=1571606068',
+    'https://cdn.shopify.com/s/files/1/1061/1924/products/Grey_Bird_Emoji_PNG_large.png?v=1571606088',
+    'https://cdn.shopify.com/s/files/1/1061/1924/products/chicken_emoji_icon_png_large.png?v=1571606068',
+    'https://cdn.shopify.com/s/files/1/1061/1924/products/tiger_emoji_icon_png_large.png?v=1571606089',
+    'https://cdn.shopify.com/s/files/1/1061/1924/products/Monkey_Face_Emoji_large.png?v=1571606065'
   ]
 
-  const selectedOrigin = fakeData.find(({ item }) => selectedItem === hoveredOriginId)
-  console.log(selectedOrigin)
+  const selectedDirectory = animals && animals.find((item) => item.id === hoveredOriginId)
 
   return (
     <GoogleMap zoom={10} center={center} mapContainerClassName="map-container" options={{ styles: mapStyles.styles }}>
-      {fakeData.map(data => (
-        <Marker 
-          key={data.animal_id}
+      {animals && animals.length ? animals.map((data) => (
+        <Marker
+          key={data.id}
           position={{
             lat: data.latitude,
             lng: data.longitude
-          }} 
+          }}
           onClick={() => {
-            setSelectedItem(data);
+            setSelectedMarker(data);
           }}
           icon={{
-            url: 'https://cdn.shopify.com/s/files/1/1061/1924/products/Pig_Emoji_large.png?v=1571606065',
-            scaledSize: new window.google.maps.Size(75, 75)
+            url: icons[Math.floor(Math.random() * 8)],
+            scaledSize: new window.google.maps.Size(50, 50)
           }}
         />
-      ))}
+      )) : null}
 
-      {selectedItem && (
+      {selectedDirectory &&
         <InfoWindow
           onCloseClick={() => {
-            setSelectedItem(null);
+            // ????????
           }}
           position={{
-            lat: selectedItem.latitude,
-            lng: selectedItem.longitude
-          }} 
-          >
+            lat: selectedDirectory.latitude,
+            lng: selectedDirectory.longitude
+          }}
+        >
           <div>
-            <h1>{selectedItem.animal_name.replaceAll('_', ' ')}</h1>
-            <img src={selectedItem.animal_image} alt={selectedItem.animal_name.replaceAll('_', ' ')} />
+            <h1>{selectedDirectory.name.replaceAll('_', ' ')}</h1>
+            <img src={selectedDirectory.image} alt={selectedDirectory.name.replaceAll('_', ' ')} />
+          </div>
+        </InfoWindow>
+      }
+
+      {selectedMarker && (
+        <InfoWindow
+          onCloseClick={() => {
+            setSelectedMarker(null);
+          }}
+          position={{
+            lat: selectedMarker.latitude,
+            lng: selectedMarker.longitude
+          }}
+        >
+          <div>
+            <img src={selectedMarker.image} alt={selectedMarker.name.replaceAll('_', ' ')} />
+            <h3 style={{ textAlign: 'center'}}>{selectedMarker.name.replaceAll('_', ' ')}</h3>
           </div>
         </InfoWindow>
       )}
