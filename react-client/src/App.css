@@ -15,10 +15,23 @@
   align-items: center;
   justify-content: center; */
   color: white;
-  width: 30%;
+  width: 20%;
   max-height: 600px;
   margin: 60px 10px;
   overflow: auto;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.gm-style-iw-d {
+  overflow: hidden !important;
+}
+
+.gm-style-iw-c {
+  padding: 1rem !important;
 }
 
 .map-container {
@@ -30,4 +43,6 @@ img {
   text-align: center;
   max-width: 300px;
   max-height: 300px;
+  border-radius: 5%;
+  border: 2px solid white;
 }

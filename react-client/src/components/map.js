@@ -64,7 +64,7 @@ const FetchMap = ({ hoveredOriginId }) => {
           }}
           icon={{
             url: icons[Math.floor(Math.random() * 8)],
-            scaledSize: new window.google.maps.Size(75, 75)
+            scaledSize: new window.google.maps.Size(50, 50)
           }}
         />
       )) : null}
@@ -97,8 +97,8 @@ const FetchMap = ({ hoveredOriginId }) => {
           }}
         >
           <div>
-            <h1>{selectedMarker.name.replaceAll('_', ' ')}</h1>
             <img src={selectedMarker.image} alt={selectedMarker.name.replaceAll('_', ' ')} />
+            <h3 style={{ textAlign: 'center'}}>{selectedMarker.name.replaceAll('_', ' ')}</h3>
           </div>
         </InfoWindow>
       )}
