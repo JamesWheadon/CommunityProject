@@ -23,7 +23,7 @@ export const Directory = ({ id, data, onHover }) => {
           <li key={data.id}>
             <ul>
               <ListSubheader>{data.name.replaceAll('_', ' ')}</ListSubheader>
-              <ListItem onClick={handleClick} key={data.animal_id}>
+              <ListItem onClick={handleClick} key={data.id} style={{justifyContent:'center', alignItems: 'center'}}>
                 <img src={data.image} alt={data.name.replaceAll('_', ' ')} height="200px" width="200px" />
               </ListItem>
             </ul>
