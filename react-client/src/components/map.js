@@ -37,6 +37,17 @@ const FetchMap = ({ hoveredOriginId }) => {
     } fetchAnimals();
   }, []);
 
+  const icons = [
+    'https://cdn.shopify.com/s/files/1/1061/1924/products/Horse_emoji_icon_png_large.png?v=1571606088',
+    'https://cdn.shopify.com/s/files/1/1061/1924/products/Pig_Emoji_large.png?v=1571606065',
+    'https://cdn.shopify.com/s/files/1/1061/1924/products/Dog_Emoji_large.png?v=1571606065',
+    'https://cdn.shopify.com/s/files/1/1061/1924/products/CAT_emoji_icon_png_large.png?v=1571606068',
+    'https://cdn.shopify.com/s/files/1/1061/1924/products/Grey_Bird_Emoji_PNG_large.png?v=1571606088',
+    'https://cdn.shopify.com/s/files/1/1061/1924/products/chicken_emoji_icon_png_large.png?v=1571606068',
+    'https://cdn.shopify.com/s/files/1/1061/1924/products/tiger_emoji_icon_png_large.png?v=1571606089',
+    'https://cdn.shopify.com/s/files/1/1061/1924/products/Monkey_Face_Emoji_large.png?v=1571606065'
+  ]
+
   const selectedDirectory = animals && animals.find((item) => item.id === hoveredOriginId)
 
   return (
